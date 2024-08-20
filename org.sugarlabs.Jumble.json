@@ -1,0 +1,89 @@
+{
+    "app-id": "org.sugarlabs.Jumble",
+    "base": "org.sugarlabs.BaseApp",
+    "base-version": "24.04",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "46",
+    "sdk": "org.gnome.Sdk",
+    "separate-locales": false,
+    "command": "sugarapp",
+    "finish-args": [
+        "--socket=x11",
+        "--socket=pulseaudio",
+        "--share=ipc",
+        "--device=dri",
+        "--env=SUGAR_BUNDLE_ID=org.sugarlabs.",
+        "--env=SUGAR_BUNDLE_PATH=/app/share/sugar/activities/Jumble.activity"
+    ],
+    "modules": [
+        {
+            "name": "pygame2",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://files.pythonhosted.org/packages/72/49/bd2fcbadb6a55bb24284bad4f530189401c99ffc234d51ba54756a776eb2/pygame-2.6.0.tar.gz",
+                    "sha256": "722d33ae676aa8533c1f955eded966411298831346b8d51a77dad22e46ba3e35",
+                    "x-checker-data": {
+                        "type": "pypi",
+                        "name": "pygame"
+                    }
+                }
+            ],
+            "buildsystem": "simple",
+            "build-commands": [
+                "pip3 install --ignore-installed --no-deps --prefix=/app ."
+            ],
+            "build-options": {
+                "env": {
+                    "PORTMIDI_INC_PORTTIME": "1",
+                    "PYGAME_EXTRA_BASE": "/app"
+                },
+                "arch": {
+                    "aarch64": {
+                        "env": {
+                            "ORIGLIBDIRS": "/lib:/lib64:/lib/aarch64-linux-gnu"
+                        }
+                    },
+                    "x86_64": {
+                        "env": {
+                            "ORIGLIBDIRS": "/lib:/lib64:/lib/x86_64-linux-gnu"
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "name": "Jumble",
+            "buildsystem": "simple",
+            "build-commands": [
+                "python3 setup.py install --prefix=${FLATPAK_DEST} --skip-install-desktop-file --skip-install-mime"
+            ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://github.com/sugarlabs/jumble-activity.git",
+                    "commit": "8963ff883105d93a5803511ddee4008940ec06b2"
+                },
+                {
+                    "type": "patch",
+                    "path": "jumble-port.patch"
+                },
+
+                {
+                    "type": "patch",
+                    "path": "jumble-info.patch"
+                }
+            ],
+            "post-install": [
+                "sugarapp-gen-mimetypes activity/activity.info mimetypes",
+                "sugarapp-gen-appdata activity/activity.info appdata",
+                "sugarapp-gen-desktop activity/activity.info desktop --mimetypes mimetypes",
+                "install -D mimetypes /app/share/mime/packages/org.sugarlabs.Jumble.xml",
+                "install -D mimetypes /app/share/sugar/activities/Jumble.activity/activity/mimetypes.xml",
+                "install -D appdata /app/share/metainfo/org.sugarlabs.Jumble.metainfo.xml",
+                "install -D desktop /app/share/applications/org.sugarlabs.Jumble.desktop",
+                "install -D activity/activity.svg /app/share/icons/hicolor/scalable/apps/org.sugarlabs.Jumble.svg"
+            ]
+        }
+    ]
+}
