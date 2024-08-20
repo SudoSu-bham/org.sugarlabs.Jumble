@@ -1,0 +1,38 @@
+diff --git a/activity.py b/activity.py
+index 13aeb27..d5fbdfc 100755
+--- a/activity.py
++++ b/activity.py
+@@ -4,26 +4,27 @@
+ import gi
+ gi.require_version('Gtk', '3.0')
+ from gi.repository import Gtk
+-from sugar3.activity import activity
+ from sugar3.graphics.toolbarbox import ToolbarBox
+-from sugar3.activity.widgets import ActivityToolbarButton
+ from sugar3.activity.widgets import StopButton
+ import pygame
+ import sugargame.canvas
+ import load_save
+ import Jumble
+ 
++from sugarapp.widgets import SugarCompatibleActivity
++from sugarapp.widgets import ExtendedActivityToolbarButton
+ 
+-class PeterActivity(activity.Activity):
+-    def __init__(self, handle):
+-        super(PeterActivity, self).__init__(handle)
+ 
++class PeterActivity(SugarCompatibleActivity):
++    def __init__(self, handle):
++        SugarCompatibleActivity.__init__(self, handle)
++        
+         # Build the activity toolbar.
+         toolbar_box = ToolbarBox()
+         self.set_toolbar_box(toolbar_box)
+         toolbar_box.show()
+ 
+-        activity_button = ActivityToolbarButton(self)
++        activity_button = ExtendedActivityToolbarButton(self)
+         toolbar_box.toolbar.insert(activity_button, -1)
+         activity_button.show()
+ 
