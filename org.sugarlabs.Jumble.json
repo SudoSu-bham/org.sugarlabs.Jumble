@@ -62,7 +62,7 @@
                 {
                     "type": "git",
                     "url": "https://github.com/sugarlabs/jumble-activity.git",
-                    "commit": "8963ff883105d93a5803511ddee4008940ec06b2"
+                    "commit": "005ab380ea26ad13f89d196af548cdbfdf92f9a2"
                 },
                 {
                     "type": "patch",
